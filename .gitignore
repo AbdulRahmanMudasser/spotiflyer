@@ -1,0 +1,21 @@
+# Flutter/Dart
+**/build/
+**/.dart_tool/
+**/.flutter-plugins
+**/.packages
+**/.pub-cache
+**/pubspec.lock
+
+# Python
+**/__pycache__/
+**/*.py[cod]
+**/env/
+**/venv/
+**/.env
+**/.venv
+**/*.log
+
+# General
+.DS_Store
+.vscode/
+*.swp
