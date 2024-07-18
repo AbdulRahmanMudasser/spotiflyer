@@ -1,9 +1,12 @@
 import 'package:client/core/responsiveness/size_config.dart';
-import 'package:client/core/theme/app_palette.dart';
 import 'package:client/core/theme/sizes.dart';
+import 'package:client/features/auth/repositories/auth_remote_repo.dart';
+import 'package:client/features/auth/view/pages/signin_page.dart';
 import 'package:client/features/auth/view/widgets/auth_gradient_button.dart';
+import 'package:client/features/auth/view/widgets/auth_link_text.dart';
 import 'package:client/features/auth/view/widgets/custom_textformfield.dart';
 import 'package:flutter/material.dart';
+import 'package:fpdart/fpdart.dart' as fpdart;
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -85,25 +88,34 @@ class _SignUpPageState extends State<SignUpPage> {
                     fontSize: s.sp(FontSize.SM),
                     width: s.wp(92),
                     height: s.hp(5),
-                    onTap: () {},
+                    onTap: () async {
+                      final response = await AuthRemoteRepo().signup(
+                        name: nameController.text.trim(),
+                        email: emailController.text.trim(),
+                        password: passwordController.text.trim(),
+                      );
+
+                      final value = switch (response) {
+                        fpdart.Left(value: final l) => l,
+                        fpdart.Right(value: final r) => r.toString(),
+                      };
+
+                      debugPrint(value.toString());
+                    },
                   ),
                   const SizedBox(height: 45),
-                  RichText(
-                    text: TextSpan(
-                      style: TextStyle(
-                        fontSize: s.sp(FontSize.SM),
-                      ),
-                      text: "Already have an account?  ",
-                      children: const [
-                        TextSpan(
-                          text: "Sign In",
-                          style: TextStyle(
-                            color: AppPalette.gradient2,
-                            fontWeight: FontWeight.bold,
-                          ),
+                  AuthLinkText(
+                    s: s,
+                    leadingText: "Already have an account?  ",
+                    text: "Sign In",
+                    onTap: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SignInPage(),
                         ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
                 ],
               ),

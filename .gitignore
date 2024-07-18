@@ -19,3 +19,5 @@
 .DS_Store
 .vscode/
 *.swp
+server/host.py
+client/lib/core/constants/server_constants.dart
