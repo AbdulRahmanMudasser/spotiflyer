@@ -1,9 +1,13 @@
 import 'package:client/core/responsiveness/size_config.dart';
-import 'package:client/core/theme/app_palette.dart';
 import 'package:client/core/theme/sizes.dart';
+import 'package:client/features/auth/repositories/auth_remote_repo.dart';
+import 'package:client/features/auth/view/pages/signup_page.dart';
 import 'package:client/features/auth/view/widgets/auth_gradient_button.dart';
 import 'package:client/features/auth/view/widgets/custom_textformfield.dart';
 import 'package:flutter/material.dart';
+import 'package:fpdart/fpdart.dart' as fpdart;
+
+import '../widgets/auth_link_text.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -78,25 +82,33 @@ class _SignInPageState extends State<SignInPage> {
                     fontSize: s.sp(FontSize.SM),
                     width: s.wp(92),
                     height: s.hp(5),
-                    onTap: () {},
+                    onTap: () async {
+                      final response = await AuthRemoteRepo().signin(
+                        email: emailController.text.trim(),
+                        password: passwordController.text.trim(),
+                      );
+
+                      final result = switch (response) {
+                        fpdart.Left(value: final l) => l,
+                        fpdart.Right(value: final r) => r.toString(),
+                      };
+
+                      debugPrint(result.toString());
+                    },
                   ),
                   const SizedBox(height: 45),
-                  RichText(
-                    text: TextSpan(
-                      style: TextStyle(
-                        fontSize: s.sp(FontSize.SM),
-                      ),
-                      text: "Don't have an account?  ",
-                      children: const [
-                        TextSpan(
-                          text: "Sign Up",
-                          style: TextStyle(
-                            color: AppPalette.gradient2,
-                            fontWeight: FontWeight.bold,
-                          ),
+                  AuthLinkText(
+                    s: s,
+                    onTap: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SignUpPage(),
                         ),
-                      ],
-                    ),
+                      );
+                    },
+                    leadingText: "Don't have an account?  ",
+                    text: "Sign Up",
                   ),
                 ],
               ),
